@@ -1,1 +1,8 @@
+/* This is a separate Tailwind CSS file if you want to import it standalone */
 
+/* Tailwind base styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* You can add custom Tailwind overrides here if needed */
