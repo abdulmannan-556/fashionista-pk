@@ -1,32 +1,27 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home.jsx";
+import Shop from "./pages/Shop.jsx";
+import Product from "./pages/Product.jsx";
+import Cart from "./pages/Cart.jsx";
+import About from "./pages/About.jsx";
+import Header from "./components/Header.jsx";
+import Footer from "./components/Footer.jsx";
 
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Home from "./pages/Home";
-import Shop from "./pages/Shop";
-import Product from "./pages/Product";
-import Cart from "./pages/Cart";
-import About from "./pages/About";
-
-function App() {
+const App = () => {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/product/:id" element={<Product />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/about" element={<About />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/product/:id" element={<Product />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+      <Footer />
     </Router>
   );
-}
+};
 
 export default App;
