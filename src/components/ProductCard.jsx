@@ -1,23 +1,29 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { CartContext } from "../context/CartContext.jsx";
 
 const ProductCard = ({ product }) => {
+  const { addToCart } = useContext(CartContext);
+
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition duration-300">
+    <div className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition">
       <Link to={`/product/${product.id}`}>
         <img
           src={product.image}
           alt={product.name}
           className="w-full h-64 object-cover"
         />
-        <div className="p-4">
-          <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
-          <p className="text-gray-700 mt-2">${product.price.toFixed(2)}</p>
-          <button className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-500 transition">
-            View Details
-          </button>
-        </div>
       </Link>
+      <div className="p-4">
+        <h2 className="text-lg font-semibold mb-2">{product.name}</h2>
+        <p className="text-gray-700 mb-4">${product.price}</p>
+        <button
+          onClick={() => addToCart(product)}
+          className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+        >
+          Add to Cart
+        </button>
+      </div>
     </div>
   );
 };
