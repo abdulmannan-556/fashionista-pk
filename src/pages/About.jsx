@@ -2,29 +2,24 @@ import React from "react";
 
 const About = () => {
   return (
-    <div className="container mx-auto py-12">
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-900">
-        About Fashionista PK
-      </h1>
-
-      <div className="max-w-4xl mx-auto text-gray-700 space-y-6">
+    <div className="container mx-auto py-12 px-4">
+      <h2 className="text-3xl font-bold mb-6 text-center">About Fashionista PK</h2>
+      
+      <div className="max-w-3xl mx-auto text-gray-700 space-y-6">
         <p>
-          Fashionista PK is your premier online destination for the latest fashion trends in Pakistan. 
-          We are passionate about providing high-quality apparel, accessories, and footwear that keep you stylish and confident.
+          Fashionista PK is your go-to online fashion store for trendy clothing,
+          stylish accessories, and premium quality apparel.
         </p>
 
         <p>
-          Our mission is to make fashion accessible to everyone while maintaining exceptional quality and customer service. 
-          From casual wear to elegant evening outfits, Fashionista PK has something for every occasion.
+          Our mission is to provide affordable, modern fashion for everyone.
+          We carefully curate our collections to ensure style, comfort, and
+          quality in every product.
         </p>
 
         <p>
-          Our team carefully curates products from trusted suppliers and local designers to bring you the best selection at affordable prices. 
-          Whether you are looking for trendy pieces or timeless classics, we strive to offer products that meet your fashion needs.
-        </p>
-
-        <p>
-          Thank you for choosing Fashionista PK. Your style journey starts here!
+          Thank you for choosing Fashionista PK. We’re committed to making
+          your shopping experience smooth, enjoyable, and reliable.
         </p>
       </div>
     </div>
