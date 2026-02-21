@@ -11,6 +11,7 @@ import Register from "./pages/Register.jsx";
 
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
+import ProtectedRoute from "./ProtectedRoute.jsx";
 
 const App = () => {
   return (
@@ -22,8 +23,17 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/product/:id" element={<Product />} />
-        <Route path="/cart" element={<Cart />} />
         <Route path="/about" element={<About />} />
+
+        {/* Protected Route */}
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <Cart />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
