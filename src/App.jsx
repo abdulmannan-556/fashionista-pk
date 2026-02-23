@@ -8,6 +8,7 @@ import Cart from "./pages/Cart.jsx";
 import About from "./pages/About.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+import AddProduct from "./pages/AddProduct.jsx";
 
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
@@ -25,12 +26,21 @@ const App = () => {
         <Route path="/product/:id" element={<Product />} />
         <Route path="/about" element={<About />} />
 
-        {/* Protected Route */}
+        {/* Protected Routes */}
         <Route
           path="/cart"
           element={
             <ProtectedRoute>
               <Cart />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/add-product"
+          element={
+            <ProtectedRoute>
+              <AddProduct />
             </ProtectedRoute>
           }
         />
