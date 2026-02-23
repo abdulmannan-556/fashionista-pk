@@ -1,54 +1,61 @@
-import React from "react";
-import ProductCard from "../components/ProductCard.jsx";
-
-// Sample products (later will be dynamic)
-const products = [
-  {
-    id: 1,
-    name: "Stylish Jacket",
-    price: 79.99,
-    image: "https://via.placeholder.com/400x400?text=Jacket"
-  },
-  {
-    id: 2,
-    name: "Casual Sneakers",
-    price: 49.99,
-    image: "https://via.placeholder.com/400x400?text=Sneakers"
-  },
-  {
-    id: 3,
-    name: "Classic T-Shirt",
-    price: 19.99,
-    image: "https://via.placeholder.com/400x400?text=T-Shirt"
-  },
-  {
-    id: 4,
-    name: "Denim Jeans",
-    price: 59.99,
-    image: "https://via.placeholder.com/400x400?text=Jeans"
-  },
-  {
-    id: 5,
-    name: "Leather Bag",
-    price: 99.99,
-    image: "https://via.placeholder.com/400x400?text=Bag"
-  },
-  {
-    id: 6,
-    name: "Summer Hat",
-    price: 24.99,
-    image: "https://via.placeholder.com/400x400?text=Hat"
-  }
-];
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Shop = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("https://fashionistapk-backend-production.up.railway.app/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setProducts(data.products);
+        } else {
+          setProducts([]);
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <h2 className="text-center mt-10">Loading products...</h2>;
+  }
+
   return (
-    <div className="container mx-auto py-12 px-4">
-      <h2 className="text-3xl font-bold mb-8 text-center">Shop All Products</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+    <div className="p-8">
+      <h1 className="text-3xl font-bold mb-6 text-center">Shop</h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {products.length > 0 ? (
+          products.map((product) => (
+            <div
+              key={product._id}
+              className="border rounded-lg p-4 shadow"
+            >
+              <img
+                src={product.image}
+                alt={product.name}
+                className="h-48 w-full object-cover mb-4"
+              />
+              <h2 className="text-xl font-semibold">{product.name}</h2>
+              <p className="text-gray-600">${product.price}</p>
+
+              <Link
+                to={`/product/${product._id}`}
+                className="inline-block mt-3 bg-purple-600 text-white px-4 py-2 rounded"
+              >
+                View Product
+              </Link>
+            </div>
+          ))
+        ) : (
+          <p>No products available.</p>
+        )}
       </div>
     </div>
   );
