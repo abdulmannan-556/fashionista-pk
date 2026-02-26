@@ -14,14 +14,18 @@ const Login = () => {
 
     const data = await loginUser(email, password);
 
-    if (data.token) {
-      // ✅ SAVE USER INFO
+    if (data && data.token) {
+      // ✅ Remove old token system completely
+      localStorage.removeItem("token");
+
+      // ✅ Store only ONE auth object
       localStorage.setItem("userInfo", JSON.stringify(data));
 
       setMessage("Login successful!");
       navigate("/");
+      window.location.reload(); // Force refresh state safely
     } else {
-      setMessage(data.message || "Login failed");
+      setMessage(data?.message || "Login failed");
     }
   };
 
