@@ -6,32 +6,32 @@ const Header = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if token exists in localStorage
-    const token = localStorage.getItem("token");
-    if (token) {
-      // Fetch logged-in user info
-      fetch("https://fashionistapk-backend-production.up.railway.app/api/auth/me", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) setUser(data.user);
-          else setUser(null);
-        })
-        .catch(() => setUser(null));
-    } else {
+    // Get userInfo from localStorage
+    const userInfo = localStorage.getItem("userInfo");
+
+    if (!userInfo) {
+      setUser(null);
+      return;
+    }
+
+    try {
+      const parsedUser = JSON.parse(userInfo);
+
+      if (parsedUser && parsedUser.token) {
+        setUser(parsedUser);
+      } else {
+        setUser(null);
+      }
+    } catch (error) {
       setUser(null);
     }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("userInfo");
     setUser(null);
     navigate("/login");
+    window.location.reload();
   };
 
   return (
@@ -48,7 +48,19 @@ const Header = () => {
 
         {user ? (
           <>
-            <span>Hello, {user.id.slice(0, 6)}</span>
+            <span className="font-semibold">
+              Hello, {user.name}
+            </span>
+
+            {user.role === "admin" && (
+              <Link
+                to="/add-product"
+                className="px-3 py-1 bg-green-600 text-white rounded"
+              >
+                Add Product
+              </Link>
+            )}
+
             <button
               onClick={handleLogout}
               className="px-3 py-1 bg-red-500 text-white rounded"
