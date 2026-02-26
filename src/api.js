@@ -1,8 +1,24 @@
 const API_URL = "https://fashionistapk-backend-production.up.railway.app/api";
 
-// ==========================
-// REGISTER USER
-// ==========================
+/* ==========================
+   GET TOKEN FROM userInfo
+========================== */
+const getToken = () => {
+  const userInfo = localStorage.getItem("userInfo");
+
+  if (!userInfo) return null;
+
+  try {
+    const parsed = JSON.parse(userInfo);
+    return parsed.token;
+  } catch {
+    return null;
+  }
+};
+
+/* ==========================
+   REGISTER USER
+========================== */
 export const registerUser = async (name, email, password) => {
   const response = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
@@ -15,9 +31,9 @@ export const registerUser = async (name, email, password) => {
   return response.json();
 };
 
-// ==========================
-// LOGIN USER
-// ==========================
+/* ==========================
+   LOGIN USER
+========================== */
 export const loginUser = async (email, password) => {
   const response = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
@@ -29,19 +45,16 @@ export const loginUser = async (email, password) => {
 
   const data = await response.json();
 
-  // Save token if login successful
-  if (data.token) {
-    localStorage.setItem("token", data.token);
-  }
-
-  return data;
+  return data; // DO NOT save token here anymore
 };
 
-// ==========================
-// GET CURRENT USER (Protected)
-// ==========================
+/* ==========================
+   GET CURRENT USER
+========================== */
 export const getCurrentUser = async () => {
-  const token = localStorage.getItem("token");
+  const token = getToken();
+
+  if (!token) return null;
 
   const response = await fetch(`${API_URL}/auth/me`, {
     method: "GET",
@@ -54,9 +67,9 @@ export const getCurrentUser = async () => {
   return response.json();
 };
 
-// ==========================
-// LOGOUT
-// ==========================
+/* ==========================
+   LOGOUT USER
+========================== */
 export const logoutUser = () => {
-  localStorage.removeItem("token");
+  localStorage.removeItem("userInfo");
 };
