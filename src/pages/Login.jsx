@@ -15,6 +15,9 @@ const Login = () => {
     const data = await loginUser(email, password);
 
     if (data.token) {
+      // ✅ SAVE USER INFO
+      localStorage.setItem("userInfo", JSON.stringify(data));
+
       setMessage("Login successful!");
       navigate("/");
     } else {
