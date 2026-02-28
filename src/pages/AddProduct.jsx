@@ -20,7 +20,14 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
+    // ✅ Get token from userInfo (CORRECT SYSTEM)
+    const userInfo = localStorage.getItem("userInfo");
+    const token = userInfo ? JSON.parse(userInfo).token : null;
+
+    if (!token) {
+      setMessage("Not authorized. Please login again.");
+      return;
+    }
 
     try {
       const res = await fetch(
@@ -29,7 +36,7 @@ const AddProduct = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, // ✅ Now valid
           },
           body: JSON.stringify(formData),
         }
