@@ -1,16 +1,14 @@
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children, adminOnly = false }) => {
-  const userInfo = localStorage.getItem("userInfo");
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  if (!userInfo) {
-    // Not logged in
+  // Not logged in
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
 
-  const user = JSON.parse(userInfo);
-
-  // If route requires admin access
+  // If route requires admin
   if (adminOnly && user.role !== "admin") {
     return <Navigate to="/" replace />;
   }
