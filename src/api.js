@@ -43,9 +43,7 @@ export const loginUser = async (email, password) => {
     body: JSON.stringify({ email, password }),
   });
 
-  const data = await response.json();
-
-  return data; // DO NOT save token here anymore
+  return response.json();
 };
 
 /* ==========================
@@ -72,4 +70,66 @@ export const getCurrentUser = async () => {
 ========================== */
 export const logoutUser = () => {
   localStorage.removeItem("userInfo");
+};
+
+/* ==========================
+   PRODUCT APIs
+========================== */
+
+/* GET ALL PRODUCTS */
+export const getAllProducts = async () => {
+  const response = await fetch(`${API_URL}/products`);
+  return response.json();
+};
+
+/* GET SINGLE PRODUCT */
+export const getSingleProduct = async (id) => {
+  const response = await fetch(`${API_URL}/products/${id}`);
+  return response.json();
+};
+
+/* CREATE PRODUCT (Admin Only) */
+export const createProduct = async (productData) => {
+  const token = getToken();
+
+  const response = await fetch(`${API_URL}/products`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(productData),
+  });
+
+  return response.json();
+};
+
+/* UPDATE PRODUCT (Admin Only) */
+export const updateProduct = async (id, productData) => {
+  const token = getToken();
+
+  const response = await fetch(`${API_URL}/products/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(productData),
+  });
+
+  return response.json();
+};
+
+/* DELETE PRODUCT (Admin Only) */
+export const deleteProduct = async (id) => {
+  const token = getToken();
+
+  const response = await fetch(`${API_URL}/products/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.json();
 };
