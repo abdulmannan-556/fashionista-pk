@@ -1,16 +1,25 @@
 import { useEffect, useState } from "react";
 import AdminLayout from "../components/admin/AdminLayout";
 import ProductTable from "../components/admin/ProductTable";
-import api from "../api";
+import { getAllProducts, deleteProduct } from "../api";
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  /* ==========================
+     FETCH PRODUCTS
+  ========================== */
   const fetchProducts = async () => {
     try {
-      const { data } = await api.get("/products");
-      setProducts(data.products);
+      const data = await getAllProducts();
+
+      if (data && data.products) {
+        setProducts(data.products);
+      } else {
+        setProducts([]);
+      }
+
       setLoading(false);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -18,6 +27,9 @@ const AdminProducts = () => {
     }
   };
 
+  /* ==========================
+     DELETE PRODUCT
+  ========================== */
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this product?"
@@ -26,7 +38,9 @@ const AdminProducts = () => {
     if (!confirmDelete) return;
 
     try {
-      await api.delete(`/products/${id}`);
+      await deleteProduct(id);
+
+      // refresh list
       fetchProducts();
     } catch (error) {
       console.error("Delete error:", error);
@@ -34,6 +48,9 @@ const AdminProducts = () => {
     }
   };
 
+  /* ==========================
+     PAGE LOAD
+  ========================== */
   useEffect(() => {
     fetchProducts();
   }, []);
