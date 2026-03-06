@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminLayout from "../components/admin/AdminLayout";
-import api from "../api";
+import { getSingleProduct, updateProduct } from "../api";
 
 const EditProduct = () => {
   const { id } = useParams();
@@ -16,10 +16,17 @@ const EditProduct = () => {
 
   const [loading, setLoading] = useState(true);
 
+  /* ==========================
+     FETCH PRODUCT
+  ========================== */
   const fetchProduct = async () => {
     try {
-      const { data } = await api.get(`/products/${id}`);
-      setFormData(data.product);
+      const data = await getSingleProduct(id);
+
+      if (data && data.product) {
+        setFormData(data.product);
+      }
+
       setLoading(false);
     } catch (error) {
       console.error("Error fetching product:", error);
@@ -27,6 +34,9 @@ const EditProduct = () => {
     }
   };
 
+  /* ==========================
+     INPUT CHANGE
+  ========================== */
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -34,12 +44,17 @@ const EditProduct = () => {
     });
   };
 
+  /* ==========================
+     UPDATE PRODUCT
+  ========================== */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      await api.put(`/products/${id}`, formData);
+      await updateProduct(id, formData);
+
       alert("Product updated successfully");
+
       navigate("/admin/products");
     } catch (error) {
       console.error("Update error:", error);
@@ -47,6 +62,9 @@ const EditProduct = () => {
     }
   };
 
+  /* ==========================
+     PAGE LOAD
+  ========================== */
   useEffect(() => {
     fetchProduct();
   }, []);
@@ -111,6 +129,7 @@ const styles = {
   heading: {
     marginBottom: "20px",
   },
+
   form: {
     backgroundColor: "#fff",
     padding: "20px",
@@ -121,17 +140,20 @@ const styles = {
     gap: "15px",
     maxWidth: "500px",
   },
+
   input: {
     padding: "10px",
     borderRadius: "6px",
     border: "1px solid #ddd",
   },
+
   textarea: {
     padding: "10px",
     borderRadius: "6px",
     border: "1px solid #ddd",
     minHeight: "100px",
   },
+
   button: {
     backgroundColor: "#6c5ce7",
     color: "#fff",
