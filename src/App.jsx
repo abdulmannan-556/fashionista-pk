@@ -8,7 +8,10 @@ import Cart from "./pages/Cart.jsx";
 import About from "./pages/About.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
-import AddProduct from "./pages/AddProduct.jsx";
+
+/* ADMIN PAGES */
+import AdminProducts from "./pages/AdminProducts.jsx";
+import AdminAddProduct from "./pages/AdminAddProduct.jsx";
 
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
@@ -20,13 +23,23 @@ const App = () => {
       <Header />
 
       <Routes>
-        {/* Public Routes */}
+        {/* =============================
+           PUBLIC ROUTES
+        ============================= */}
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/about" element={<About />} />
 
-        {/* Protected Routes */}
+        {/* =============================
+           AUTH ROUTES
+        ============================= */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* =============================
+           PROTECTED ROUTES
+        ============================= */}
         <Route
           path="/cart"
           element={
@@ -36,18 +49,26 @@ const App = () => {
           }
         />
 
+        {/* =============================
+           ADMIN ROUTES
+        ============================= */}
         <Route
-          path="/add-product"
+          path="/admin/products"
           element={
             <ProtectedRoute>
-              <AddProduct />
+              <AdminProducts />
             </ProtectedRoute>
           }
         />
 
-        {/* Auth Routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/admin/add-product"
+          element={
+            <ProtectedRoute>
+              <AdminAddProduct />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
 
       <Footer />
