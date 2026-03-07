@@ -1,8 +1,26 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { deleteProduct } from "../../api";
 
-const ProductTable = ({ products, onDelete }) => {
+const ProductTable = ({ products, refreshProducts }) => {
+  const navigate = useNavigate();
+
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this product?");
+
+    if (!confirmDelete) return;
+
+    try {
+      await deleteProduct(id);
+      alert("Product deleted successfully");
+      refreshProducts();
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Failed to delete product");
+    }
+  };
+
   return (
-    <div style={styles.wrapper}>
+    <div style={styles.container}>
       <table style={styles.table}>
         <thead>
           <tr>
@@ -12,43 +30,39 @@ const ProductTable = ({ products, onDelete }) => {
             <th style={styles.th}>Actions</th>
           </tr>
         </thead>
+
         <tbody>
-          {products.length === 0 ? (
-            <tr>
-              <td colSpan="4" style={styles.empty}>
-                No products found
+          {products.map((product) => (
+            <tr key={product._id}>
+              <td style={styles.td}>
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  style={styles.image}
+                />
+              </td>
+
+              <td style={styles.td}>{product.name}</td>
+
+              <td style={styles.td}>Rs. {product.price}</td>
+
+              <td style={styles.td}>
+                <button
+                  style={styles.editBtn}
+                  onClick={() => navigate(`/admin/edit-product/${product._id}`)}
+                >
+                  Edit
+                </button>
+
+                <button
+                  style={styles.deleteBtn}
+                  onClick={() => handleDelete(product._id)}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
-          ) : (
-            products.map((product) => (
-              <tr key={product._id} style={styles.tr}>
-                <td style={styles.td}>
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    style={styles.image}
-                  />
-                </td>
-                <td style={styles.td}>{product.name}</td>
-                <td style={styles.td}>Rs. {product.price}</td>
-                <td style={styles.td}>
-                  <Link
-                    to={`/admin/edit-product/${product._id}`}
-                    style={styles.editBtn}
-                  >
-                    Edit
-                  </Link>
-
-                  <button
-                    onClick={() => onDelete(product._id)}
-                    style={styles.deleteBtn}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))
-          )}
+          ))}
         </tbody>
       </table>
     </div>
@@ -56,56 +70,53 @@ const ProductTable = ({ products, onDelete }) => {
 };
 
 const styles = {
-  wrapper: {
+  container: {
     backgroundColor: "#fff",
     padding: "20px",
     borderRadius: "10px",
     boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
   },
+
   table: {
     width: "100%",
     borderCollapse: "collapse",
   },
+
   th: {
     textAlign: "left",
     padding: "12px",
     borderBottom: "1px solid #eee",
   },
+
   td: {
     padding: "12px",
-    borderBottom: "1px solid #f0f0f0",
+    borderBottom: "1px solid #eee",
   },
-  tr: {
-    transition: "0.2s",
-  },
+
   image: {
-    width: "60px",
-    height: "60px",
+    width: "50px",
+    height: "50px",
     objectFit: "cover",
-    borderRadius: "6px",
-  },
-  editBtn: {
-    backgroundColor: "#0984e3",
-    color: "#fff",
-    padding: "6px 12px",
     borderRadius: "5px",
-    textDecoration: "none",
-    marginRight: "8px",
-    fontSize: "14px",
   },
-  deleteBtn: {
-    backgroundColor: "#d63031",
+
+  editBtn: {
+    backgroundColor: "#3498db",
     color: "#fff",
     border: "none",
     padding: "6px 12px",
-    borderRadius: "5px",
+    borderRadius: "4px",
+    marginRight: "10px",
     cursor: "pointer",
-    fontSize: "14px",
   },
-  empty: {
-    textAlign: "center",
-    padding: "20px",
-    color: "#999",
+
+  deleteBtn: {
+    backgroundColor: "#e74c3c",
+    color: "#fff",
+    border: "none",
+    padding: "6px 12px",
+    borderRadius: "4px",
+    cursor: "pointer",
   },
 };
 
