@@ -9,9 +9,12 @@ import About from "./pages/About.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 
-/* ADMIN PAGES */
+/* =============================
+   ADMIN PAGES
+============================= */
 import AdminProducts from "./pages/AdminProducts.jsx";
 import AdminAddProduct from "./pages/AdminAddProduct.jsx";
+import AdminEditProduct from "./pages/AdminEditProduct.jsx";
 
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
@@ -23,6 +26,7 @@ const App = () => {
       <Header />
 
       <Routes>
+
         {/* =============================
            PUBLIC ROUTES
         ============================= */}
@@ -38,7 +42,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
 
         {/* =============================
-           PROTECTED ROUTES
+           USER PROTECTED ROUTES
         ============================= */}
         <Route
           path="/cart"
@@ -52,6 +56,7 @@ const App = () => {
         {/* =============================
            ADMIN ROUTES
         ============================= */}
+
         <Route
           path="/admin/products"
           element={
@@ -69,6 +74,16 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/admin/edit-product/:id"
+          element={
+            <ProtectedRoute>
+              <AdminEditProduct />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
 
       <Footer />
