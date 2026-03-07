@@ -5,7 +5,7 @@ const AdminSidebar = () => {
 
   const menuItems = [
     { name: "Dashboard", path: "/admin/products" },
-    { name: "Add Product", path: "/add-product" },
+    { name: "Add Product", path: "/admin/add-product" },
   ];
 
   return (
