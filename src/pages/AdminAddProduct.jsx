@@ -8,7 +8,7 @@ const AdminAddProduct = () => {
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null);
   const [description, setDescription] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -28,14 +28,14 @@ const AdminAddProduct = () => {
     try {
       setLoading(true);
 
-      const productData = {
-        name,
-        price,
-        image,
-        description,
-      };
+      const formData = new FormData();
 
-      const response = await createProduct(productData);
+      formData.append("name", name);
+      formData.append("price", price);
+      formData.append("description", description);
+      formData.append("image", image);
+
+      const response = await createProduct(formData);
 
       if (response.success) {
         alert("Product created successfully");
@@ -75,10 +75,9 @@ const AdminAddProduct = () => {
         />
 
         <input
-          type="text"
-          placeholder="Image URL"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImage(e.target.files[0])}
           style={styles.input}
         />
 
