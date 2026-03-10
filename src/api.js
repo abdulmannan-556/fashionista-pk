@@ -89,32 +89,30 @@ export const getSingleProduct = async (id) => {
 };
 
 /* CREATE PRODUCT (Admin Only) */
-export const createProduct = async (productData) => {
+export const createProduct = async (formData) => {
   const token = getToken();
 
   const response = await fetch(`${API_URL}/products`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(productData),
+    body: formData,
   });
 
   return response.json();
 };
 
 /* UPDATE PRODUCT (Admin Only) */
-export const updateProduct = async (id, productData) => {
+export const updateProduct = async (id, formData) => {
   const token = getToken();
 
   const response = await fetch(`${API_URL}/products/${id}`, {
     method: "PUT",
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(productData),
+    body: formData,
   });
 
   return response.json();
