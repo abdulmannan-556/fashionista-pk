@@ -10,7 +10,7 @@ const EditProduct = () => {
   const [formData, setFormData] = useState({
     name: "",
     price: "",
-    image: null, // changed to null for file upload
+    image: null, // file object if new image uploaded
     description: "",
   });
 
@@ -42,7 +42,7 @@ const EditProduct = () => {
   };
 
   /* ==========================
-     INPUT CHANGE
+     HANDLE INPUT CHANGE
   ========================== */
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -59,6 +59,7 @@ const EditProduct = () => {
   ========================== */
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const data = new FormData();
@@ -66,18 +67,24 @@ const EditProduct = () => {
       data.append("price", formData.price);
       data.append("description", formData.description);
 
-      // only append image if a new file was selected
+      // Only append new image if selected
       if (formData.image) {
         data.append("image", formData.image);
       }
 
-      await updateProduct(id, data);
+      const response = await updateProduct(id, data);
 
-      alert("Product updated successfully");
-      navigate("/admin/products");
+      if (response.success) {
+        alert("Product updated successfully");
+        navigate("/admin/products");
+      } else {
+        alert(response.message || "Failed to update product");
+      }
     } catch (error) {
       console.error("Update error:", error);
-      alert("Failed to update product");
+      alert("Server error while updating product");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -124,7 +131,7 @@ const EditProduct = () => {
               onChange={handleChange}
               style={styles.input}
             />
-            {currentImage && !formData.image && (
+            {!formData.image && currentImage && (
               <img
                 src={currentImage}
                 alt="Current Product"
@@ -145,8 +152,8 @@ const EditProduct = () => {
             required
           />
 
-          <button type="submit" style={styles.button}>
-            Update Product
+          <button type="submit" style={styles.button} disabled={loading}>
+            {loading ? "Updating..." : "Update Product"}
           </button>
         </form>
       )}
@@ -155,42 +162,11 @@ const EditProduct = () => {
 };
 
 const styles = {
-  heading: {
-    marginBottom: "20px",
-  },
-
-  form: {
-    backgroundColor: "#fff",
-    padding: "20px",
-    borderRadius: "10px",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-    display: "flex",
-    flexDirection: "column",
-    gap: "15px",
-    maxWidth: "500px",
-  },
-
-  input: {
-    padding: "10px",
-    borderRadius: "6px",
-    border: "1px solid #ddd",
-  },
-
-  textarea: {
-    padding: "10px",
-    borderRadius: "6px",
-    border: "1px solid #ddd",
-    minHeight: "100px",
-  },
-
-  button: {
-    backgroundColor: "#6c5ce7",
-    color: "#fff",
-    padding: "10px",
-    border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
-  },
+  heading: { marginBottom: "20px" },
+  form: { backgroundColor: "#fff", padding: "20px", borderRadius: "10px", boxShadow: "0 2px 8px rgba(0,0,0,0.05)", display: "flex", flexDirection: "column", gap: "15px", maxWidth: "500px" },
+  input: { padding: "10px", borderRadius: "6px", border: "1px solid #ddd" },
+  textarea: { padding: "10px", borderRadius: "6px", border: "1px solid #ddd", minHeight: "100px" },
+  button: { backgroundColor: "#6c5ce7", color: "#fff", padding: "10px", border: "none", borderRadius: "6px", cursor: "pointer" },
 };
 
 export default EditProduct;
