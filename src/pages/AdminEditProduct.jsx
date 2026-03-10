@@ -10,11 +10,12 @@ const EditProduct = () => {
   const [formData, setFormData] = useState({
     name: "",
     price: "",
-    image: "",
+    image: null, // changed to null for file upload
     description: "",
   });
 
   const [loading, setLoading] = useState(true);
+  const [currentImage, setCurrentImage] = useState(""); // preview current image
 
   /* ==========================
      FETCH PRODUCT
@@ -24,7 +25,13 @@ const EditProduct = () => {
       const data = await getSingleProduct(id);
 
       if (data && data.product) {
-        setFormData(data.product);
+        setFormData({
+          name: data.product.name,
+          price: data.product.price,
+          image: null,
+          description: data.product.description,
+        });
+        setCurrentImage(data.product.image || "");
       }
 
       setLoading(false);
@@ -38,10 +45,13 @@ const EditProduct = () => {
      INPUT CHANGE
   ========================== */
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value, files } = e.target;
+
+    if (name === "image" && files && files[0]) {
+      setFormData({ ...formData, image: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   /* ==========================
@@ -51,10 +61,19 @@ const EditProduct = () => {
     e.preventDefault();
 
     try {
-      await updateProduct(id, formData);
+      const data = new FormData();
+      data.append("name", formData.name);
+      data.append("price", formData.price);
+      data.append("description", formData.description);
+
+      // only append image if a new file was selected
+      if (formData.image) {
+        data.append("image", formData.image);
+      }
+
+      await updateProduct(id, data);
 
       alert("Product updated successfully");
-
       navigate("/admin/products");
     } catch (error) {
       console.error("Update error:", error);
@@ -97,15 +116,25 @@ const EditProduct = () => {
             required
           />
 
-          <input
-            type="text"
-            name="image"
-            placeholder="Image URL"
-            value={formData.image}
-            onChange={handleChange}
-            style={styles.input}
-            required
-          />
+          <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+            <input
+              type="file"
+              name="image"
+              accept="image/*"
+              onChange={handleChange}
+              style={styles.input}
+            />
+            {currentImage && !formData.image && (
+              <img
+                src={currentImage}
+                alt="Current Product"
+                style={{ maxWidth: "150px", borderRadius: "6px", marginTop: "5px" }}
+              />
+            )}
+            {formData.image && (
+              <p>New image selected: {formData.image.name}</p>
+            )}
+          </div>
 
           <textarea
             name="description"
