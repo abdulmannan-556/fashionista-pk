@@ -9,14 +9,24 @@ const AdminAddProduct = () => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [description, setDescription] = useState("");
-
   const [loading, setLoading] = useState(false);
+
+  /* ==========================
+     IMAGE CHANGE HANDLER
+  ========================== */
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
 
   /* ==========================
      SUBMIT PRODUCT
   ========================== */
-
   const submitHandler = async (e) => {
     e.preventDefault();
 
@@ -29,7 +39,6 @@ const AdminAddProduct = () => {
       setLoading(true);
 
       const formData = new FormData();
-
       formData.append("name", name);
       formData.append("price", price);
       formData.append("description", description);
@@ -39,16 +48,14 @@ const AdminAddProduct = () => {
 
       if (response.success) {
         alert("Product created successfully");
-
         navigate("/admin/products");
       } else {
         alert(response.message || "Failed to create product");
       }
-
-      setLoading(false);
     } catch (error) {
       console.error("Create product error:", error);
-      alert("Server error");
+      alert("Server error while creating product");
+    } finally {
       setLoading(false);
     }
   };
@@ -64,6 +71,7 @@ const AdminAddProduct = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           style={styles.input}
+          required
         />
 
         <input
@@ -72,20 +80,31 @@ const AdminAddProduct = () => {
           value={price}
           onChange={(e) => setPrice(e.target.value)}
           style={styles.input}
+          required
         />
 
         <input
           type="file"
           accept="image/*"
-          onChange={(e) => setImage(e.target.files[0])}
+          onChange={handleImageChange}
           style={styles.input}
+          required
         />
+
+        {imagePreview && (
+          <img
+            src={imagePreview}
+            alt="Preview"
+            style={{ marginTop: "10px", maxWidth: "200px", borderRadius: "6px" }}
+          />
+        )}
 
         <textarea
           placeholder="Product Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           style={styles.textarea}
+          required
         />
 
         <button type="submit" style={styles.button} disabled={loading}>
@@ -97,38 +116,11 @@ const AdminAddProduct = () => {
 };
 
 const styles = {
-  heading: {
-    marginBottom: "20px",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    maxWidth: "500px",
-    gap: "12px",
-  },
-  input: {
-    padding: "10px",
-    border: "1px solid #ddd",
-    borderRadius: "6px",
-    fontSize: "14px",
-  },
-  textarea: {
-    padding: "10px",
-    border: "1px solid #ddd",
-    borderRadius: "6px",
-    minHeight: "120px",
-    fontSize: "14px",
-  },
-  button: {
-    backgroundColor: "#00b894",
-    color: "#fff",
-    border: "none",
-    padding: "12px",
-    borderRadius: "6px",
-    cursor: "pointer",
-    fontSize: "15px",
-    fontWeight: "bold",
-  },
+  heading: { marginBottom: "20px" },
+  form: { display: "flex", flexDirection: "column", maxWidth: "500px", gap: "12px" },
+  input: { padding: "10px", border: "1px solid #ddd", borderRadius: "6px", fontSize: "14px" },
+  textarea: { padding: "10px", border: "1px solid #ddd", borderRadius: "6px", minHeight: "120px", fontSize: "14px" },
+  button: { backgroundColor: "#00b894", color: "#fff", border: "none", padding: "12px", borderRadius: "6px", cursor: "pointer", fontSize: "15px", fontWeight: "bold" },
 };
 
 export default AdminAddProduct;
